@@ -1,3 +1,5 @@
+require 'io/console'
+
 students = [
   {name: "Dr. Hannibal Lecter", cohort: :november},
   {name: "Darth Vader", cohort: :november},
@@ -12,6 +14,3 @@ students = [
   {name: "Norman Bates", cohort: :november}
 ]
 
-students.each_with_index do |student, index|
-    puts "#{index+1}: #{student[:name]} (#{student[:cohort]} cohort)"
-end

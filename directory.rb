@@ -1,3 +1,5 @@
+require 'io/console'
+
 def input_students
     puts "Please enter the names of the students"
     puts "To finish, just hit return twice"
@@ -15,6 +17,27 @@ def input_students
     end
     #return the array of students
     students
+end
+
+def filter_students(students)
+    puts "Enter a letter from A-Z"
+    
+    #taking the first character the user inputs only (using: require 'io/console')
+    letter = STDIN.getch
+    letter = letter.upcase
+  
+    if letter =~ /[A-Z]/
+        students.each_with_index do |student, index|
+            if student[:name][0,1].upcase == letter
+                puts "#{index+1}: #{student[:name]} (#{student[:cohort]} cohort)"
+            else
+                puts "No more students beginning with #{letter}."
+                exit
+            end
+        end
+    else
+        puts "Invalid input!"
+    end
 end
 
 def print_header
@@ -37,3 +60,5 @@ students = input_students
 print_header
 print(students)
 print_footer(students)
+puts
+filter_students(students)
