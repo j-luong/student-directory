@@ -59,16 +59,28 @@ def print(students)
   end
 end
 
+#Solution to 8.4
+def print_while(students)
+    student = 0
+    while student < students.length do
+        puts "#{student+1}: #{students[student][:name]} (#{students[student][:cohort]} cohort)"
+        student += 1
+    end
+end
+
 def print_footer(names)
   puts "Overall, we have #{names.count} great students"
 end
 
 #nothing happens until we call the methods
 students = input_students
+puts "\n8.1 demo"
 print_header
 print(students)
 print_footer(students)
-puts "8.2 demo"
+puts "\n8.2 demo"
 filter_students(students)
-puts "8.3 demo"
+puts "\n8.3 demo"
 name_length(students, 12)
+puts "\n8.4 demo"
+print_while(students)

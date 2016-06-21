@@ -58,4 +58,12 @@ def name_length(students, length)
     end
 end
 
-name_length(students, 19)
+def print_while(students)
+    student = 0
+    while student < students.length do
+        puts "#{student+1}: #{students[student][:name]} (#{students[student][:cohort]} cohort)"
+        student += 1
+    end
+end
+
+print_while(students)
