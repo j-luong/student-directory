@@ -19,6 +19,16 @@ def input_students
     students
 end
 
+#Solution to 8.3
+def name_length(students, length)
+    students.each_with_index do |student, index|
+        if student[:name].length < length
+            puts "#{index+1}: #{student[:name]} (#{student[:cohort]} cohort)"
+        end
+    end
+end
+
+#Solution to 8.2
 def filter_students(students)
     puts "Enter a letter from A-Z"
     
@@ -30,9 +40,6 @@ def filter_students(students)
         students.each_with_index do |student, index|
             if student[:name][0,1].upcase == letter
                 puts "#{index+1}: #{student[:name]} (#{student[:cohort]} cohort)"
-            else
-                puts "No more students beginning with #{letter}."
-                exit
             end
         end
     else
@@ -45,6 +52,7 @@ def print_header
   puts "-------------"
 end
 
+#Solution to 8.1
 def print(students)
   students.each_with_index do |student, index|
     puts "#{index+1}: #{student[:name]} (#{student[:cohort]} cohort)"
@@ -60,5 +68,7 @@ students = input_students
 print_header
 print(students)
 print_footer(students)
-puts
+puts "8.2 demo"
 filter_students(students)
+puts "8.3 demo"
+name_length(students, 12)
