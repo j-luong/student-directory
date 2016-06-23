@@ -19,6 +19,45 @@ def input_students
     students
 end
 
+#Solution to 8.5
+def input_students_more
+    add_more = ''
+    #creates an empty array
+    students = []
+
+    until add_more == 'N' do
+        puts "Please enter the name of a student"
+        name = gets.chomp
+        name = name.capitalize
+        puts "Please enter the student's cohort"
+        cohort = gets.chomp
+        cohort = cohort.capitalize
+        puts "Please enter student's country of birth"
+        country = gets.chomp
+        country = country.capitalize
+        puts "Please enter student's height in cm."
+        height = gets.chomp
+        
+        #add the student hash to the array
+        students << {name: name, 
+                     cohort: cohort,
+                     country: country,
+                     height: height}
+        
+        puts "Now we have #{students.count} students"
+        
+        add_more = ''
+        
+        until (add_more == 'Y') || (add_more == 'N') do
+            puts "Add more students? (Y/N)"
+            add_more = gets.chomp
+            add_more = add_more.upcase!
+        end
+    end
+    #return the array of students
+    students
+end
+
 #Solution to 8.3
 def name_length(students, length)
     students.each_with_index do |student, index|
