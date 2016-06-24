@@ -23,6 +23,7 @@ def input_students
         end
         
         cohort = Date::MONTHNAMES[cohort.to_i]
+        cohort = cohort.to_sym
         
         country = ''
         while country.empty? do
@@ -76,7 +77,7 @@ def align(students)
     puts ": #{headers[:id].center(4)} : #{headers[:name].center(longest_name," ")} : #{headers[:cohort].center(9," ")} : #{headers[:country].center(longest_country," ")} : #{headers[:height].center(3," ")} :"
     students.each_with_index do |student, index|
         index += 1
-        puts ": #{index.to_s.center(4)} : #{student[:name].to_s.center(longest_name, " ")} : #{student[:cohort].to_s.center(9, " ")} : #{student[:country].to_s.center((longest_country > 8 ? longest_country:8) , " ")} : #{student[:height].to_s.center(headers[:height].length, " ")} :"
+        puts ": #{index.to_s.center(4)} : #{student[:name].to_s.center(longest_name, " ")} : #{student[:cohort].to_s.center(9, " ")} : #{student[:country].to_s.center((longest_country > 8 ? longest_country:7) , " ")} : #{student[:height].to_s.center(headers[:height].length, " ")} :"
     end
 end
 
