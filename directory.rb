@@ -6,7 +6,6 @@ def input_students
     add_more = ''
     #creates an empty array
     students = []
-    cohort = 0
     
     puts "Adding more input options for list (8.5), cohort is no longer hard coded (8.7).\n\n"
     until add_more == 'N' do
@@ -17,6 +16,7 @@ def input_students
             name = name.split.map(&:capitalize).join(' ')
         end
         
+        cohort = 0
         until cohort.to_i.between?(1,12) do
             puts "Please enter the student's cohort between 1-12 (1 = January - 12 = December"
             cohort = gets.chomp
@@ -43,7 +43,11 @@ def input_students
                      country: country,
                      height: height}
         
-        puts "Now we have #{students.count} students"
+        if students.length == 1
+            puts "Now we have #{students.count} student"
+        else
+            puts "Now we have #{students.count} students"
+        end
         
         add_more = ''
         

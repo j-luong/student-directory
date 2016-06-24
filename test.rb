@@ -129,7 +129,6 @@ end
 
 #align(students)
 
-#require 'date'
-num = 1
-
-puts Date::MONTHNAMES[1]
+puts "press a key"
+key = gets.chop
+puts "You pressed #{key}, hello!"
