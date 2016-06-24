@@ -1,41 +1,44 @@
 require 'io/console'
-require 'date'
 
-#Solution to 8.5/8.7
 def input_students
+    puts "Please enter the names of the students"
+    puts "To finish, just hit return twice"
+    #creates an empty array
+    students = []
+    #gets the first name
+    name = gets.chomp
+    #while the name is not empty, repeat this code
+    while !name.empty? do
+        #add the student hash to the array
+        students << {name: name, cohort: :november}
+        puts "Now we have #{students.count} students"
+        #get another name from the user
+        name = gets.chomp
+    end
+    #return the array of students
+    students
+end
+
+#Solution to 8.5
+def input_students_more
     add_more = ''
     #creates an empty array
     students = []
-    cohort = 0
     
-    puts "Adding more input options for list (8.5), cohort is no longer hard coded (8.7).\n\n"
+    puts "Adding more input options for list\n\n"
     until add_more == 'N' do
-        name = ''
-        while name.empty? do
-            puts "Please enter the name of a student"
-            name = gets.chomp
-            name = name.split.map(&:capitalize).join(' ')
-        end
+        puts "Please enter the name of a student"
+        name = gets.chomp
+        name = name.split.map(&:capitalize).join(' ')
+        puts "Please enter the student's cohort"
+        cohort = gets.chomp
+        cohort = cohort.capitalize
+        puts "Please enter student's country of birth"
+        country = gets.chomp
+        country = country.split.map(&:capitalize).join(' ')
+        puts "Please enter student's height in cm."
+        height = gets.chomp
         
-        until cohort.to_i.between?(1,12) do
-            puts "Please enter the student's cohort between 1-12 (1 = January - 12 = December"
-            cohort = gets.chomp
-        end
-        
-        cohort = Date::MONTHNAMES[cohort.to_i]
-        
-        country = ''
-        while country.empty? do
-            puts "Please enter student's country of birth"
-            country = gets.chomp
-            country = country.split.map(&:capitalize).join(' ')
-        end
-        
-        height = ''
-        until (height.to_i >= 50) && (height.to_i <= 300) do
-            puts "Please enter student's height in (between 50cm - 300cm.)"
-            height = gets.chomp
-        end
         #add the student hash to the array
         students << {name: name, 
                      cohort: cohort,
@@ -59,24 +62,20 @@ end
 #Solution to 8.6
 def align(students)
     longest_name = 0
-    longest_country = 0
-    headers = {id: "ID", name: "Name", cohort: "Cohort", country: "Country", height: "Height"}
     
+    diff = 0
     puts "Showing pretty formatting using .center:\n"
     
     students.each do |student|
         if student[:name].length > longest_name
             longest_name = student[:name].length
         end
-        if student[:country].length > longest_country
-            longest_country = student[:country].length
-        end
     end
     
-    puts ": #{headers[:id].center(4)} : #{headers[:name].center(longest_name," ")} : #{headers[:cohort].center(9," ")} : #{headers[:country].center(longest_country," ")} : #{headers[:height].center(3," ")} :"
     students.each_with_index do |student, index|
         index += 1
-        puts ": #{index.to_s.center(4)} : #{student[:name].to_s.center(longest_name, " ")} : #{student[:cohort].to_s.center(9, " ")} : #{student[:country].to_s.center((longest_country > 8 ? longest_country:8) , " ")} : #{student[:height].to_s.center(headers[:height].length, " ")} :"
+        diff = longest_name - student[:name].length
+        puts "#{index.to_s.center(4)}: #{student[:name].to_s.center(longest_name, " ")} (#{student[:cohort].to_s.center(9, " ")} cohort)"
     end
 end
 
@@ -109,6 +108,11 @@ def filter_students(students)
     end
 end
 
+def print_header
+  puts "The students of Villains Academy"
+  puts "-------------"
+end
+
 #Solution to 8.1
 def print(students)
     puts "Showing index of list using .each_with_index:\n"
@@ -127,19 +131,14 @@ def print_while(students)
     end
 end
 
-def print_header
-  puts "The students of Villains Academy"
-  puts "-------------"
-end
-
 def print_footer(names)
   puts "Overall, we have #{names.count} great students"
 end
 
 #nothing happens until we call the methods
 puts "8.5 demo"
-students = input_students
-align(students)
+students = input_students_more
+puts students
 =begin
 puts "\n8.1 demo"
 print_header

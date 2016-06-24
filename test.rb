@@ -1,18 +1,20 @@
 require 'io/console'
 
 students = [
-  {name: "Dr. Hannibal Lecter", cohort: :november},
-  {name: "Darth Vader", cohort: :november},
-  {name: "Nurse Ratched", cohort: :november},
-  {name: "Michael Corleone", cohort: :november},
-  {name: "Alex DeLarge", cohort: :november},
-  {name: "The Wicked Witch of the West", cohort: :november},
-  {name: "Terminator", cohort: :november},
-  {name: "Freddy Krueger", cohort: :november},
-  {name: "The Joker", cohort: :november},
-  {name: "Joffrey Baratheon", cohort: :november},  
-  {name: "Norman Bates", cohort: :november}
+  {name: "Dr. Hannibal Lecter", cohort: :July, country: "United Kingdom", height: 150},
+  {name: "Darth Vader", cohort: :July, country: "United Kingdom", height: 178},
+  {name: "Nurse Ratched", cohort: :November, country: "France", height: 177},
+  {name: "Michael Corleone", cohort: :November, country: "France", height: 184},
+  {name: "Alex DeLarge", cohort: :January, country: "Germany", height: 210},
+  {name: "The Wicked Witch of the West", cohort: :February, country: "Germany", height: 185},
+  {name: "Terminator", cohort: :August, country: "Spain", height: 202},
+  {name: "Freddy Krueger", cohort: :August, country: "Spain", height: 140},
+  {name: "The Joker", cohort: :October, country: "United States", height: 158},
+  {name: "Joffrey Baratheon", cohort: :September, country: "United States", height: 169},  
+  {name: "Norman Bates", cohort: :September, country: "Sweden", height: 172}
 ]
+
+
 
 def print(students)
     puts "Enter a letter from A-Z"
@@ -104,4 +106,30 @@ def input_students_more
     students
 end
 
-puts input_students_more
+def align(students)
+    longest_name = 0
+    longest_country = 0
+    headers = {id: "ID", name: "Name", cohort: "Cohort", country: "Country", height: "Height"}
+    
+    students.each do |student|
+        if student[:name].length > longest_name
+            longest_name = student[:name].length
+        end
+        if student[:country].length > longest_country
+            longest_country = student[:country].length
+        end
+    end
+    
+    puts ":#{headers[:id].center(4)}: #{headers[:name].center(longest_name," ")}: #{headers[:cohort].center(9," ")}: #{headers[:country].center(longest_country," ")}: #{headers[:height].center(3," ")}:"
+    students.each_with_index do |student, index|
+        index += 1
+        puts ":#{index.to_s.center(4)}: #{student[:name].to_s.center(longest_name, " ")}: #{student[:cohort].to_s.center(9, " ")}: #{student[:country].to_s.center(longest_country, " ")}: #{student[:height].to_s.center(headers[:height].length, " ")}:"
+    end
+end
+
+#align(students)
+
+#require 'date'
+num = 1
+
+puts Date::MONTHNAMES[1]
