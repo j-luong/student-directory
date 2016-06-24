@@ -1,13 +1,13 @@
 require 'io/console'
 require 'date'
 
-#Solution to 8.5/8.7
+#Solution to 8.5/8.7/8.9
 def input_students
     add_more = ''
     #creates an empty array
     students = []
     
-    puts "Adding more input options for list (8.5), cohort is no longer hard coded (8.7).\n\n"
+    puts "Adding more input options for list (8.5), cohort is no longer hard coded (8.7), student count message is grammatically correct (8.9).\n\n"
     until add_more == 'N' do
         name = ''
         while name.empty? do
@@ -61,6 +61,27 @@ def input_students
     students
 end
 
+#Solution to 8.8
+def order_students(students)
+    month = 0
+    until month.to_i.between?(1,12) do
+        puts "Please enter the student's cohort between 1-12 (1 = January - 12 = December"
+        month = gets.chomp
+    end
+        
+    month = Date::MONTHNAMES[month.to_i]
+    month = month.to_sym
+
+    students_select = students.select { |value| value[:cohort] == month }
+    
+    if students_select.length == 0
+        puts "No students in the #{month} cohort."
+    else
+        puts "Showing students in the #{month} cohort:"
+        align(students_select)
+    end
+end
+
 #Solution to 8.6
 def align(students)
     longest_name = 0
@@ -77,6 +98,8 @@ def align(students)
             longest_country = student[:country].length
         end
     end
+    
+    #students = students.sort_by {|value| value[:cohort]}
     
     puts ": #{headers[:id].center(4)} : #{headers[:name].center(longest_name," ")} : #{headers[:cohort].center(9," ")} : #{headers[:country].center(longest_country," ")} : #{headers[:height].center(3," ")} :"
     students.each_with_index do |student, index|
@@ -142,10 +165,9 @@ def print_footer(names)
 end
 
 #nothing happens until we call the methods
-puts "8.5 demo"
+puts "8.5/8.7/8.9 demo"
 students = input_students
-align(students)
-=begin
+#align(students)
 puts "\n8.1 demo"
 print_header
 print(students)
@@ -158,4 +180,5 @@ puts "\n8.4 demo"
 print_while(students)
 puts "\n8.6 demo"
 align(students)
-=end
+puts "\n8.8 demo"
+order_students(students)

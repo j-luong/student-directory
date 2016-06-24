@@ -1,4 +1,5 @@
 require 'io/console'
+require 'date'
 
 students = [
   {name: "Dr. Hannibal Lecter", cohort: :July, country: "United Kingdom", height: 150},
@@ -13,8 +14,6 @@ students = [
   {name: "Joffrey Baratheon", cohort: :September, country: "United States", height: 169},  
   {name: "Norman Bates", cohort: :September, country: "Sweden", height: 172}
 ]
-
-
 
 def print(students)
     puts "Enter a letter from A-Z"
@@ -120,15 +119,33 @@ def align(students)
         end
     end
     
+    #students = students.sort_by {|value| value[:cohort]}
+    
     puts ":#{headers[:id].center(4)}: #{headers[:name].center(longest_name," ")}: #{headers[:cohort].center(9," ")}: #{headers[:country].center(longest_country," ")}: #{headers[:height].center(3," ")}:"
     students.each_with_index do |student, index|
         index += 1
-        puts ":#{index.to_s.center(4)}: #{student[:name].to_s.center(longest_name, " ")}: #{student[:cohort].to_s.center(9, " ")}: #{student[:country].to_s.center(longest_country, " ")}: #{student[:height].to_s.center(headers[:height].length, " ")}:"
+        puts ":#{index.to_s.center(4)}: #{student[:name].to_s.center(longest_name, " ")}: #{student[:cohort].to_s.center(9, " ")}: #{student[:country].to_s.center((longest_country > 8 ? longest_country:7) , " ")}: #{student[:height].to_s.center(headers[:height].length, " ")}:"
     end
 end
 
-#align(students)
+def order_students(students)
+    month = 0
+    until month.to_i.between?(1,12) do
+        puts "Please enter the student's cohort between 1-12 (1 = January - 12 = December"
+        month = gets.chomp
+    end
+        
+    month = Date::MONTHNAMES[month.to_i]
+    month = month.to_sym
 
-puts "press a key"
-key = gets.chop
-puts "You pressed #{key}, hello!"
+    students_select = students.select { |value| value[:cohort] == month }
+    
+    if students_select.length == 0
+        puts "No students in the #{month} cohort."
+    else
+        puts "Showing students in the #{month} cohort:"
+        align(students_select)
+    end
+end
+
+order_students(students)
