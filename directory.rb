@@ -14,6 +14,7 @@ students = [
   {name: "Joffrey Baratheon", cohort: 8, country: "United States", height: 169},  
   {name: "Norman Bates", cohort: 4, country: "Sweden", height: 172}
 ]
+#students = []
 
 #Solution to 8.5/8.7/8.9
 def input_students(students)
@@ -70,8 +71,14 @@ def input_students(students)
     students
 end
 
-#Solution to 8.1, 8.4, 8.6, 8.8
+#Solution to 8.1, 8.4, 8.6, 8.8, 8.12
 def print_students(students)
+    #Making sure there are students in the list
+    if students.empty?
+        puts "There are no students!"
+        return
+    end
+    
     longest_name = 0
     longest_country = 0
     headers = {id: "ID", name: "Name", cohort: "Cohort", country: "Country", height: "Height"}
@@ -104,12 +111,12 @@ end
 
 #Solution to 8.3
 def name_length(students, length)
+    filtered_list = []
     puts "Showing students whose name is less than #{length} characters long:\n"
-    students.each_with_index do |student, index|
-        if student[:name].length < length
-            puts "#{index+1}: #{student[:name]} (#{student[:cohort]} cohort)"
-        end
-    end
+    
+    filtered_list = students.select { |value| value[:name].length < length }
+    
+    print_students(filtered_list)
 end
 
 #Solution to 8.2
@@ -136,14 +143,6 @@ def filter_students(students)
     print_students(filtered_list)
 end
 
-#Solution to 8.1
-def print(students)
-    puts "Showing index of list using .each_with_index:\n"
-    students.each_with_index do |student, index|
-        puts "#{index+1}: #{student[:name]} (#{student[:cohort]} cohort)"
-    end
-end
-
 #Solution to 8.4
 def print_while(students)
     student = 0
@@ -168,7 +167,7 @@ def print_footer(names)
 end
 
 #nothing happens until we call the methods
-students = input_students(students)
+# students = input_students(students)
 print_students(students)
 # filter_students(students)
 # name_length(students, 12)
