@@ -1,19 +1,30 @@
 require 'io/console'
 require 'date'
 
+students = [
+  {name: "Dr. Hannibal Lecter", cohort: 1, country: "United Kingdom", height: 150},
+  {name: "Darth Vader", cohort: 3, country: "United Kingdom", height: 178},
+  {name: "Nurse Ratched", cohort: 6, country: "France", height: 177},
+  {name: "Michael Corleone", cohort: 2, country: "France", height: 184},
+  {name: "Alex DeLarge", cohort: 9, country: "Germany", height: 210},
+  {name: "The Wicked Witch of the West", cohort: 10, country: "Germany", height: 185},
+  {name: "Terminator", cohort: 9, country: "Spain", height: 202},
+  {name: "Freddy Krueger", cohort: 11, country: "Spain", height: 140},
+  {name: "The Joker", cohort: 11, country: "United States", height: 158},
+  {name: "Joffrey Baratheon", cohort: 8, country: "United States", height: 169},  
+  {name: "Norman Bates", cohort: 4, country: "Sweden", height: 172}
+]
+
 #Solution to 8.5/8.7/8.9
-def input_students
+def input_students(students)
     add_more = ''
-    #creates an empty array
-    students = []
-    
-    puts "Adding more input options for list (8.5), cohort is no longer hard coded (8.7), student count message is grammatically correct (8.9).\n\n"
+
     until add_more == 'N' do
         name = ''
         while name.empty? do
             puts "Please enter the name of a student"
             name = gets.chomp
-            name = name.split.map(&:capitalize).join(' ')
+            name = name.split.map(&:capitalize).join(' ') #capitalize each word of the string
         end
         
         cohort = 0
@@ -22,21 +33,19 @@ def input_students
             cohort = gets.chomp
         end
         
-        cohort = Date::MONTHNAMES[cohort.to_i]
-        cohort = cohort.to_sym
-        
         country = ''
         while country.empty? do
             puts "Please enter student's country of birth"
             country = gets.chomp
-            country = country.split.map(&:capitalize).join(' ')
+            country = country.split.map(&:capitalize).join(' ') #capitalize each word of the string
         end
         
-        height = ''
+        height = 0
         until (height.to_i >= 50) && (height.to_i <= 300) do
             puts "Please enter student's height in (between 50cm - 300cm.)"
             height = gets.chomp
         end
+        
         #add the student hash to the array
         students << {name: name, 
                      cohort: cohort,
@@ -50,46 +59,24 @@ def input_students
         end
         
         add_more = ''
-        
         until (add_more == 'Y') || (add_more == 'N') do
             puts "Add more students? (Y/N)"
             add_more = gets.chomp
             add_more = add_more.upcase!
         end
     end
+    
     #return the array of students
     students
 end
 
-#Solution to 8.8
-def order_students(students)
-    month = 0
-    until month.to_i.between?(1,12) do
-        puts "Please enter the student's cohort between 1-12 (1 = January - 12 = December"
-        month = gets.chomp
-    end
-        
-    month = Date::MONTHNAMES[month.to_i]
-    month = month.to_sym
-
-    students_select = students.select { |value| value[:cohort] == month }
-    
-    if students_select.length == 0
-        puts "No students in the #{month} cohort."
-    else
-        puts "Showing students in the #{month} cohort:"
-        align(students_select)
-    end
-end
-
-#Solution to 8.6
-def align(students)
+#Solution to 8.1, 8.4, 8.6, 8.8
+def print_students(students)
     longest_name = 0
     longest_country = 0
     headers = {id: "ID", name: "Name", cohort: "Cohort", country: "Country", height: "Height"}
     
-    puts "Showing pretty formatting using .center:\n"
-    
+    #Getting the longest name and country so we know how much spacing to use with pretty formatting
     students.each do |student|
         if student[:name].length > longest_name
             longest_name = student[:name].length
@@ -99,13 +86,20 @@ def align(students)
         end
     end
     
-    #students = students.sort_by {|value| value[:cohort]}
+    #8.8 solution, sorting list by cohort
+    students = students.sort_by {|value| value[:cohort].to_i}
+    
+    print_header
     
     puts ": #{headers[:id].center(4)} : #{headers[:name].center(longest_name," ")} : #{headers[:cohort].center(9," ")} : #{headers[:country].center(longest_country," ")} : #{headers[:height].center(3," ")} :"
+    
+    #8.1 solution, using .each_with_index
     students.each_with_index do |student, index|
         index += 1
-        puts ": #{index.to_s.center(4)} : #{student[:name].to_s.center(longest_name, " ")} : #{student[:cohort].to_s.center(9, " ")} : #{student[:country].to_s.center((longest_country > 8 ? longest_country:7) , " ")} : #{student[:height].to_s.center(headers[:height].length, " ")} :"
+        #8.6 solution, using .center for pretty formatting
+        puts ": #{index.to_s.center(4)} : #{student[:name].to_s.center(longest_name, " ")} : #{Date::MONTHNAMES[student[:cohort].to_i].to_s.center(9, " ")} : #{student[:country].to_s.center((longest_country > 8 ? longest_country:7) , " ")} : #{student[:height].to_s.center(headers[:height].length, " ")} :"
     end
+    print_footer(students)
 end
 
 #Solution to 8.3
@@ -120,21 +114,26 @@ end
 
 #Solution to 8.2
 def filter_students(students)
-    puts "Enter a letter from A-Z"
+    filtered_list = []
     
+    puts "Enter a letter from A-Z"
     #taking the first character the user inputs only (using: require 'io/console')
     letter = STDIN.getch
     letter = letter.upcase
-    puts "Filtering list by letter: #{letter}\n"
-    if letter =~ /[A-Z]/
-        students.each_with_index do |student, index|
-            if student[:name][0,1].upcase == letter
-                puts "#{index+1}: #{student[:name]}: (#{student[:cohort]}: cohort)"
-            end
+    
+    until letter =~ /[A-Z]/ do
+        if letter !=~/[A-|]/
+            puts "Invalid input!"
         end
-    else
-        puts "Invalid input!"
+        
+        letter = STDIN.getch
+        letter = letter.upcase
     end
+            
+    puts "Filtering list by letter: #{letter}\n"
+    filtered_list = students.select { |value| value[:name][0,1] == letter }
+
+    print_students(filtered_list)
 end
 
 #Solution to 8.1
@@ -156,29 +155,23 @@ def print_while(students)
 end
 
 def print_header
-  puts "The students of Villains Academy"
-  puts "-------------"
+    puts " " * 35 + "The students of Villains Academy"
+    puts "-" * 100
 end
 
 def print_footer(names)
-  puts "Overall, we have #{names.count} great students"
+    if names.count == 1
+        puts "Overall, we have #{names.count} great student"
+    else
+        puts "Overall, we have #{names.count} great students"
+    end
 end
 
 #nothing happens until we call the methods
-puts "8.5/8.7/8.9 demo"
-students = input_students
-#align(students)
-puts "\n8.1 demo"
-print_header
-print(students)
-print_footer(students)
-puts "\n8.2 demo"
-filter_students(students)
-puts "\n8.3 demo"
-name_length(students, 12)
-puts "\n8.4 demo"
-print_while(students)
-puts "\n8.6 demo"
-align(students)
-puts "\n8.8 demo"
-order_students(students)
+students = input_students(students)
+print_students(students)
+# filter_students(students)
+# name_length(students, 12)
+# print_while(students)
+# print_students(students)
+# order_students(students)
