@@ -164,28 +164,56 @@ def save_students
     name += ".csv"
     
     # Open file for writing
-    file = File.open(name.to_s,"w")
-    
-    # Iterate over the array of students
-    @students.each do |student|
-        student_data = [student[:name], student[:cohort], student[:country], student[:height]]
-        csv_line = student_data.join(",")
-        file.puts csv_line
+    File.open name.to_s, 'w' do |file|
+        # Iterate over the array of students
+        @students.each do |student|
+            student_data = [student[:name], student[:cohort], student[:country], student[:height]]
+            csv_line = student_data.join(",")
+            file.puts csv_line
+        end
     end
-    file.close
 end
 
 def load_students(filename = show_saved_files)
     # When loading a file, the @students array should be cleared of all contents so that the contents
     # of the loaded file can be written to it
     @students = []
-    file = File.open(filename.to_s, "r")
-    file.readlines.each do |line|
-        name, cohort, country, height = line.chomp.split(',')
-        add_students(name, cohort, country, height)
+    File.open filename.to_s, "r" do |file|
+        file.readlines.each do |line|
+            name, cohort, country, height = line.chomp.split(',')
+            add_students(name, cohort, country, height)
+        end
     end
-    file.close
 end
+
+# def save_students
+#     puts "Name your save file (file type will automatically be .csv):"
+#     name = STDIN.gets.chomp
+#     name += ".csv"
+    
+#     # Open file for writing
+#     file = File.open(name.to_s,"w")
+    
+#     # Iterate over the array of students
+#     @students.each do |student|
+#         student_data = [student[:name], student[:cohort], student[:country], student[:height]]
+#         csv_line = student_data.join(",")
+#         file.puts csv_line
+#     end
+#     file.close
+# end
+
+# def load_students(filename = show_saved_files)
+#     # When loading a file, the @students array should be cleared of all contents so that the contents
+#     # of the loaded file can be written to it
+#     @students = []
+#     file = File.open(filename.to_s, "r")
+#     file.readlines.each do |line|
+#         name, cohort, country, height = line.chomp.split(',')
+#         add_students(name, cohort, country, height)
+#     end
+#     file.close
+# end
 
 def show_saved_files
     choice = 0
