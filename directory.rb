@@ -8,7 +8,7 @@ require 'csv'
 def print_menu
   puts "1. Input the students"
   puts "2. Show the students"
-  puts "3. Save the list to students.csv"
+  puts "3. Save the list to .csv file"
   puts "4. Load the list from students.csv"
   puts "9. Exit" # 9 because we'll be adding more items  
 end
@@ -23,12 +23,16 @@ end
 def process(selection)
     case selection
     when "1"
+        puts "You've chosen to input students."
         input_students
     when "2"
+        puts "You've chosen to display the list of students."
         show_students
     when "3"
+        puts "You've chosen to save the list of students."
         save_students
     when "4"
+        puts "You've chosen to load a saved list of students."
         load_students
     when "9"
         exit
@@ -155,8 +159,12 @@ def print_footer
 end
 
 def save_students
+    puts "Name your save file (file type will automatically be .csv):"
+    name = STDIN.gets.chomp
+    name += ".csv"
+    
     # Open file for writing
-    file = File.open("students.csv","w")
+    file = File.open(name.to_s,"w")
     
     # Iterate over the array of students
     @students.each do |student|
@@ -167,17 +175,36 @@ def save_students
     file.close
 end
 
-def load_students(filename = "students.csv")
-    file = File.open("students.csv", "r")
+def load_students(filename = show_saved_files)
+    # When loading a file, the @students array should be cleared of all contents so that the contents
+    # of the loaded file can be written to it
+    @students = []
+    file = File.open(filename.to_s, "r")
     file.readlines.each do |line|
         name, cohort, country, height = line.chomp.split(',')
-        # @students << {name: name, 
-        #               cohort: cohort, 
-        #               country: country, 
-        #               height: height}
         add_students(name, cohort, country, height)
     end
     file.close
+end
+
+def show_saved_files
+    choice = 0
+    # Look for valid .csv files and store in array
+    saved_files = Dir['*.csv']
+
+    until (choice.to_i > 0) && (choice.to_i <= saved_files.count) do
+        puts "Saved .csv files in current directory, press a corresponding number to load file:"
+        
+        saved_files.each_with_index do |file, index|
+            index += 1
+            puts "#{index} : #{file}"
+        end
+        choice = STDIN.gets.chomp
+        choice = choice.to_i
+    end
+    puts "Loaded #{saved_files[(choice-1)]}"
+    
+    saved_files[(choice-1)]
 end
 
 def try_load_students
@@ -194,49 +221,49 @@ def try_load_students
     end
 end
 
-#Solution to 8.3
-def name_length(students, length)
-    filtered_list = []
-    puts "Showing students whose name is less than #{length} characters long:\n"
+# #Solution to 8.3
+# def name_length(students, length)
+#     filtered_list = []
+#     puts "Showing students whose name is less than #{length} characters long:\n"
     
-    filtered_list = students.select { |value| value[:name].length < length }
+#     filtered_list = students.select { |value| value[:name].length < length }
     
-    print_students(filtered_list)
-end
+#     print_students(filtered_list)
+# end
 
-#Solution to 8.2
-def filter_students(students)
-    filtered_list = []
+# #Solution to 8.2
+# def filter_students(students)
+#     filtered_list = []
     
-    puts "Enter a letter from A-Z"
-    #taking the first character the user inputs only (using: require 'io/console')
-    letter = STDIN.getch
-    letter = letter.upcase
+#     puts "Enter a letter from A-Z"
+#     #taking the first character the user inputs only (using: require 'io/console')
+#     letter = STDIN.getch
+#     letter = letter.upcase
     
-    until letter =~ /[A-Z]/ do
-        if letter !=~/[A-|]/
-            puts "Invalid input!"
-        end
+#     until letter =~ /[A-Z]/ do
+#         if letter !=~/[A-|]/
+#             puts "Invalid input!"
+#         end
         
-        letter = STDIN.getch
-        letter = letter.upcase
-    end
+#         letter = STDIN.getch
+#         letter = letter.upcase
+#     end
             
-    puts "Filtering list by letter: #{letter}\n"
-    filtered_list = students.select { |value| value[:name][0,1] == letter }
+#     puts "Filtering list by letter: #{letter}\n"
+#     filtered_list = students.select { |value| value[:name][0,1] == letter }
 
-    print_students(filtered_list)
-end
+#     print_students(filtered_list)
+# end
 
-#Solution to 8.4
-def print_while(students)
-    student = 0
-    puts "Printing list using while loop instead of .each:\n"
-    while student < students.length do
-        puts "#{student+1}: #{students[student][:name]} (#{students[student][:cohort]} cohort)"
-        student += 1
-    end
-end
+# #Solution to 8.4
+# def print_while(students)
+#     student = 0
+#     puts "Printing list using while loop instead of .each:\n"
+#     while student < students.length do
+#         puts "#{student+1}: #{students[student][:name]} (#{students[student][:cohort]} cohort)"
+#         student += 1
+#     end
+# end
 
 try_load_students
 interactive_menu
