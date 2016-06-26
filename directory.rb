@@ -1,5 +1,6 @@
 require 'io/console'
 require 'date'
+require 'csv'
 
 # Global variable definitions
 @students = []
@@ -68,10 +69,11 @@ def input_students
         end
         
         # Add the student hash to the array
-        @students << {name: name, 
-                     cohort: cohort,
-                     country: country,
-                     height: height}
+        # @students << {name: name, 
+        #               cohort: cohort,
+        #               country: country,
+        #               height: height}
+        add_students(name, cohort, country, height)
         
         if @students.length == 1
             puts "Now we have #{@students.count} student"
@@ -97,6 +99,14 @@ end
 def print_header
     puts " " * 35 + "The students of Villains Academy"
     puts "-" * 100
+end
+
+# Creating method to add students to array, 14.1 solution
+def add_students(name, cohort, country, height)
+    @students << {name: name, 
+                  cohort: cohort, 
+                  country: country, 
+                  height: height}
 end
 
 # Solution to 8.1, 8.4, 8.6, 8.8, 8.12
@@ -161,7 +171,11 @@ def load_students(filename = "students.csv")
     file = File.open("students.csv", "r")
     file.readlines.each do |line|
         name, cohort, country, height = line.chomp.split(',')
-        @students << {name: name, cohort: cohort, country: country, height: height}
+        # @students << {name: name, 
+        #               cohort: cohort, 
+        #               country: country, 
+        #               height: height}
+        add_students(name, cohort, country, height)
     end
     file.close
 end
@@ -169,7 +183,8 @@ end
 def try_load_students
     filename = ARGV.first # first argument from cmomand line
     
-    return if filename.nil? # exit method if there are no arguments given from command line
+    # Soltution to 14.2: Load "students.csv" by default if no arguments are given when script is run
+    filename = "students.csv" if filename.nil? # exit method if there are no arguments given from command line
     
     if File.exists?(filename) # laod the file if it exists
         load_students(filename)

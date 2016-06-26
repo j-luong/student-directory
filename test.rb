@@ -1,19 +1,21 @@
 require 'io/console'
 require 'date'
 
-students = [
-  {name: "Dr. Hannibal Lecter", cohort: 1, country: "United Kingdom", height: 150},
-  {name: "Darth Vader", cohort: 3, country: "United Kingdom", height: 178},
-  {name: "Nurse Ratched", cohort: 6, country: "France", height: 177},
-  {name: "Michael Corleone", cohort: 2, country: "France", height: 184},
-  {name: "Alex DeLarge", cohort: 9, country: "Germany", height: 210},
-  {name: "The Wicked Witch of the West", cohort: 10, country: "Germany", height: 185},
-  {name: "Terminator", cohort: 9, country: "Spain", height: 202},
-  {name: "Freddy Krueger", cohort: 11, country: "Spain", height: 140},
-  {name: "The Joker", cohort: 11, country: "United States", height: 158},
-  {name: "Joffrey Baratheon", cohort: 8, country: "United States", height: 169},  
-  {name: "Norman Bates", cohort: 4, country: "Sweden", height: 172}
-]
+# students = [
+#   {name: "Dr. Hannibal Lecter", cohort: 1, country: "United Kingdom", height: 150},
+#   {name: "Darth Vader", cohort: 3, country: "United Kingdom", height: 178},
+#   {name: "Nurse Ratched", cohort: 6, country: "France", height: 177},
+#   {name: "Michael Corleone", cohort: 2, country: "France", height: 184},
+#   {name: "Alex DeLarge", cohort: 9, country: "Germany", height: 210},
+#   {name: "The Wicked Witch of the West", cohort: 10, country: "Germany", height: 185},
+#   {name: "Terminator", cohort: 9, country: "Spain", height: 202},
+#   {name: "Freddy Krueger", cohort: 11, country: "Spain", height: 140},
+#   {name: "The Joker", cohort: 11, country: "United States", height: 158},
+#   {name: "Joffrey Baratheon", cohort: 8, country: "United States", height: 169},  
+#   {name: "Norman Bates", cohort: 4, country: "Sweden", height: 172}
+# ]
+
+@students = []
 
 =begin
 def print(students)
@@ -155,14 +157,19 @@ def order_students(students)
     end
 end
 
-def print_students(students)
+def print_students
+    # Making sure there are students in the list
+    if @students.empty?
+        puts "There are no students!"
+        return
+    end
+    
     longest_name = 0
     longest_country = 0
     headers = {id: "ID", name: "Name", cohort: "Cohort", country: "Country", height: "Height"}
     
-    puts "Showing pretty formatting using .center:\n"
-    
-    students.each do |student|
+    # Getting the longest name and country so we know how much spacing to use with pretty formatting
+    @students.each do |student|
         if student[:name].length > longest_name
             longest_name = student[:name].length
         end
@@ -171,12 +178,34 @@ def print_students(students)
         end
     end
     
-    students = students.sort_by {|value| value[:cohort]}
+    # 8.8 solution, sorting list by cohort
+    @students = @students.sort_by {|value| value[:cohort].to_i}
     
     puts ": #{headers[:id].center(4)} : #{headers[:name].center(longest_name," ")} : #{headers[:cohort].center(9," ")} : #{headers[:country].center(longest_country," ")} : #{headers[:height].center(3," ")} :"
-    students.each_with_index do |student, index|
+    
+    # 8.1 solution, using .each_with_index
+    @students.each_with_index do |student, index|
         index += 1
-        puts ": #{index.to_s.center(4)} : #{student[:name].to_s.center(longest_name, " ")} : #{Date::MONTHNAMES[student[:cohort]].to_s.center(9, " ")} : #{student[:country].to_s.center((longest_country > 8 ? longest_country:7) , " ")} : #{student[:height].to_s.center(headers[:height].length, " ")} :"
+        # 8.6 solution, using .center for pretty formatting
+        puts ": #{index.to_s.center(4)} : #{student[:name].to_s.center(longest_name, " ")} : #{Date::MONTHNAMES[student[:cohort].to_i].to_s.center(9, " ")} : #{student[:country].to_s.center((longest_country > 8 ? longest_country:7) , " ")} : #{student[:height].to_s.center(headers[:height].length, " ")} :"
     end
 end
 
+def load_students(filename = "students.csv")
+    file = File.open("students.csv", "r")
+    file.readlines.each do |line|
+        name, cohort, country, height = line.chomp.split(',')
+        add_students(name, cohort, country, height)
+    end
+    file.close
+end
+
+def add_students(name, cohort, country, height)
+    @students << {name: name, 
+                  cohort: cohort, 
+                  country: country, 
+                  height: height}
+end
+
+load_students()
+print_students()
