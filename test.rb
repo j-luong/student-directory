@@ -1,19 +1,9 @@
 require 'io/console'
 require 'date'
+require 'csv'
 
-@students = [
-  {name: "Dr. Hannibal Lecter", cohort: 1, country: "United Kingdom", height: 150},
-  {name: "Darth Vader", cohort: 3, country: "United Kingdom", height: 178},
-  {name: "Nurse Ratched", cohort: 6, country: "France", height: 177},
-  {name: "Michael Corleone", cohort: 2, country: "France", height: 184},
-  {name: "Alex DeLarge", cohort: 9, country: "Germany", height: 210},
-  {name: "The Wicked Witch of the West", cohort: 10, country: "Germany", height: 185},
-  {name: "Terminator", cohort: 9, country: "Spain", height: 202},
-  {name: "Freddy Krueger", cohort: 11, country: "Spain", height: 140},
-  {name: "The Joker", cohort: 11, country: "United States", height: 158},
-  {name: "Joffrey Baratheon", cohort: 8, country: "United States", height: 169},  
-  {name: "Norman Bates", cohort: 4, country: "Sweden", height: 172}
-]
+# Global variable definitions
+@students = []
 
 def print_menu
   puts "1. Input the students"
@@ -174,12 +164,12 @@ def save_students
     name += ".csv"
     
     # Open file for writing
-    File.open name.to_s, 'w' do |file|
+    CSV.open name.to_s, 'w' do |file|
         # Iterate over the array of students
         @students.each do |student|
-            student_data = [student[:name], student[:cohort], student[:country], student[:height]]
-            csv_line = student_data.join(",")
-            file.puts csv_line
+            # student_data = [student[:name], student[:cohort], student[:country], student[:height]]
+            # csv_line = student_data.join(",")
+            file << [student[:name], student[:cohort], student[:country], student[:height]]
         end
     end
 end
@@ -188,11 +178,9 @@ def load_students(filename = show_saved_files)
     # When loading a file, the @students array should be cleared of all contents so that the contents
     # of the loaded file can be written to it
     @students = []
-    File.open filename.to_s, "r" do |file|
-        file.readlines.each do |line|
-            name, cohort, country, height = line.chomp.split(',')
-            add_students(name, cohort, country, height)
-        end
+    CSV.foreach(filename.to_s, "r") do |file|
+        name, cohort, country, height = file
+        add_students(name, cohort, country, height)
     end
 end
 
