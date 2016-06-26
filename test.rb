@@ -180,4 +180,3 @@ def print_students(students)
     end
 end
 
-filter_students(students)
