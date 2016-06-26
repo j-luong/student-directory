@@ -1,22 +1,17 @@
 require 'io/console'
 require 'date'
 
-# students = [
-#   {name: "Dr. Hannibal Lecter", cohort: 1, country: "United Kingdom", height: 150},
-#   {name: "Darth Vader", cohort: 3, country: "United Kingdom", height: 178},
-#   {name: "Nurse Ratched", cohort: 6, country: "France", height: 177},
-#   {name: "Michael Corleone", cohort: 2, country: "France", height: 184},
-#   {name: "Alex DeLarge", cohort: 9, country: "Germany", height: 210},
-#   {name: "The Wicked Witch of the West", cohort: 10, country: "Germany", height: 185},
-#   {name: "Terminator", cohort: 9, country: "Spain", height: 202},
-#   {name: "Freddy Krueger", cohort: 11, country: "Spain", height: 140},
-#   {name: "The Joker", cohort: 11, country: "United States", height: 158},
-#   {name: "Joffrey Baratheon", cohort: 8, country: "United States", height: 169},  
-#   {name: "Norman Bates", cohort: 4, country: "Sweden", height: 172}
-# ]
-
 # Global variable definitions
 @students = []
+
+def load_students
+    file = File.open("students.csv", "r")
+    file.readlines.each do |line|
+        name, cohort, country, height = line.chomp.split(',')
+        @students << {name: name, cohort: cohort, country: country, height: height}
+    end
+    file.close
+end
 
 def save_students
     # Open file for writing
@@ -35,6 +30,7 @@ def print_menu
   puts "1. Input the students"
   puts "2. Show the students"
   puts "3. Save the list to students.csv"
+  puts "4. Load the list from students.csv"
   puts "9. Exit" # 9 because we'll be adding more items  
 end
 
@@ -52,6 +48,8 @@ def process(selection)
         show_students
     when "3"
         save_students
+    when "4"
+        load_students
     when "9"
         exit
     else
