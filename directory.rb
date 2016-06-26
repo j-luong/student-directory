@@ -14,7 +14,32 @@ students = [
   {name: "Joffrey Baratheon", cohort: 8, country: "United States", height: 169},  
   {name: "Norman Bates", cohort: 4, country: "Sweden", height: 172}
 ]
-#students = []
+
+def interactive_menu
+    students = []
+    loop do
+        
+        # 1. print the menu and ask the user what to do
+        puts "1. Input the students"
+        puts "2. Show the students"
+        puts "9. Exit" # 9 because we'll be adding more items
+        
+        # 2. read the input and save it into a variable
+        selection = gets.chomp
+        
+        # 3. do what the user has asked
+        case selection
+        when "1"
+            students = input_students(students)
+        when "2"
+            print_students(students)
+        when "9"
+            exit # this will cause the program to terminate
+        else
+            puts "I don't know what you meant, try again"
+        end
+    end
+end
 
 #Solution to 8.5/8.7/8.9
 def input_students(students)
@@ -159,7 +184,9 @@ def print_header
 end
 
 def print_footer(names)
-    if names.count == 1
+    if names.empty?
+        puts
+    elsif names.count == 1
         puts "Overall, we have #{names.count} great student"
     else
         puts "Overall, we have #{names.count} great students"
@@ -168,9 +195,11 @@ end
 
 #nothing happens until we call the methods
 # students = input_students(students)
-print_students(students)
+#print_students(students)
 # filter_students(students)
 # name_length(students, 12)
 # print_while(students)
 # print_students(students)
 # order_students(students)
+
+interactive_menu
