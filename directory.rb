@@ -4,28 +4,6 @@ require 'date'
 # Global variable definitions
 @students = []
 
-def load_students
-    file = File.open("students.csv", "r")
-    file.readlines.each do |line|
-        name, cohort, country, height = line.chomp.split(',')
-        @students << {name: name, cohort: cohort, country: country, height: height}
-    end
-    file.close
-end
-
-def save_students
-    # Open file for writing
-    file = File.open("students.csv","w")
-    
-    # Iterate over the array of students
-    @students.each do |student|
-        student_data = [student[:name], student[:cohort], student[:country], student[:height]]
-        csv_line = student_data.join(",")
-        file.puts csv_line
-    end
-    file.close
-end
-
 def print_menu
   puts "1. Input the students"
   puts "2. Show the students"
@@ -34,10 +12,11 @@ def print_menu
   puts "9. Exit" # 9 because we'll be adding more items  
 end
 
-def show_students
-    print_header
-    print_students
-    print_footer
+def interactive_menu
+    loop do
+        print_menu
+        process(STDIN.gets.chomp)
+    end
 end
 
 def process(selection)
@@ -57,13 +36,6 @@ def process(selection)
     end
 end
 
-def interactive_menu
-    loop do
-        print_menu
-        process(gets.chomp)
-    end
-end
-
 # Solution to 8.5/8.7/8.9
 def input_students
     add_more = ''
@@ -72,27 +44,27 @@ def input_students
         name = ''
         while name.empty? do
             puts "Please enter the name of a student"
-            name = gets.chomp
+            name = STDIN.gets.chomp
             name = name.split.map(&:capitalize).join(' ') #capitalize each word of the string
         end
         
         cohort = 0
         until cohort.to_i.between?(1,12) do
             puts "Please enter the student's cohort between 1-12 (1 = January - 12 = December"
-            cohort = gets.chomp
+            cohort = STDIN.gets.chomp
         end
         
         country = ''
         while country.empty? do
             puts "Please enter student's country of birth"
-            country = gets.chomp
+            country = STDIN.gets.chomp
             country = country.split.map(&:capitalize).join(' ') #capitalize each word of the string
         end
         
         height = 0
         until (height.to_i >= 50) && (height.to_i <= 300) do
             puts "Please enter student's height in (between 50cm - 300cm.)"
-            height = gets.chomp
+            height = STDIN.gets.chomp
         end
         
         # Add the student hash to the array
@@ -110,10 +82,21 @@ def input_students
         add_more = ''
         until (add_more == 'Y') || (add_more == 'N') do
             puts "Add more students? (Y/N)"
-            add_more = gets.chomp
+            add_more = STDIN.gets.chomp
             add_more = add_more.upcase!
         end
     end
+end
+
+def show_students
+    print_header
+    print_students
+    print_footer
+end
+
+def print_header
+    puts " " * 35 + "The students of Villains Academy"
+    puts "-" * 100
 end
 
 # Solution to 8.1, 8.4, 8.6, 8.8, 8.12
@@ -148,6 +131,51 @@ def print_students
         index += 1
         # 8.6 solution, using .center for pretty formatting
         puts ": #{index.to_s.center(4)} : #{student[:name].to_s.center(longest_name, " ")} : #{Date::MONTHNAMES[student[:cohort].to_i].to_s.center(9, " ")} : #{student[:country].to_s.center((longest_country > 8 ? longest_country:7) , " ")} : #{student[:height].to_s.center(headers[:height].length, " ")} :"
+    end
+end
+
+def print_footer
+    if @students.empty?
+        puts
+    elsif @students.count == 1
+        puts "Overall, we have #{@students.count} great student"
+    else
+        puts "Overall, we have #{@students.count} great students"
+    end
+end
+
+def save_students
+    # Open file for writing
+    file = File.open("students.csv","w")
+    
+    # Iterate over the array of students
+    @students.each do |student|
+        student_data = [student[:name], student[:cohort], student[:country], student[:height]]
+        csv_line = student_data.join(",")
+        file.puts csv_line
+    end
+    file.close
+end
+
+def load_students(filename = "students.csv")
+    file = File.open("students.csv", "r")
+    file.readlines.each do |line|
+        name, cohort, country, height = line.chomp.split(',')
+        @students << {name: name, cohort: cohort, country: country, height: height}
+    end
+    file.close
+end
+
+def try_load_students
+    filename = ARGV.first # first argument from cmomand line
+    
+    return if filename.nil? # exit method if there are no arguments given from command line
+    
+    if File.exists?(filename) # laod the file if it exists
+        load_students(filename)
+        puts "Loaded #{@students.count} from #{filename}"
+    else
+        puts "Sorry, #{filename} does not exist."
     end
 end
 
@@ -195,19 +223,5 @@ def print_while(students)
     end
 end
 
-def print_header
-    puts " " * 35 + "The students of Villains Academy"
-    puts "-" * 100
-end
-
-def print_footer
-    if @students.empty?
-        puts
-    elsif @students.count == 1
-        puts "Overall, we have #{@students.count} great student"
-    else
-        puts "Overall, we have #{@students.count} great students"
-    end
-end
-
+try_load_students
 interactive_menu
